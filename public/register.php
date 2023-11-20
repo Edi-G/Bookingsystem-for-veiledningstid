@@ -11,13 +11,13 @@
     <h2>Registrer ny bruker</h2>
     <form method="post" action="register.php">
         <label for="email">E-post:</label>
-        <input type="email" id="email" name="email" placeholder="E-post" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
+        <input type="email" id="email" name="email" placeholder="E-post" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
 
         <label for="password">Passord:</label>
-        <input type="password" id="password" name="password" placeholder="Passord" required>
+        <input type="password" id="password" name="password" placeholder="Passord">
 
         <label for="fullname">Fullt Navn:</label>
-        <input type="text" id="fullname" name="fullname" placeholder="Fullt Navn" value="<?php echo isset($_POST['fullname']) ? htmlspecialchars($_POST['fullname']) : ''; ?>" required>
+        <input type="text" id="fullname" name="fullname" placeholder="Fullt Navn" value="<?php echo isset($_POST['fullname']) ? htmlspecialchars($_POST['fullname']) : ''; ?>">
 
         <label for="role">Rolle:</label>
         <select id="role" name="role">
@@ -92,10 +92,11 @@ if (isset($_POST['registrer'])) {
 
 // Vis feilmeldinger hvis det finnes
 if (!empty($errorMsg)) {
-    echo "Vennligst rett følgende feil:<br>";
+    echo "<div class='error-messages'>";
     foreach ($errorMsg as $error) {
         echo htmlspecialchars($error) . "<br>";
     }
+    echo "</div>";
 }
 
 // Vis suksessmelding hvis brukeren er registrert

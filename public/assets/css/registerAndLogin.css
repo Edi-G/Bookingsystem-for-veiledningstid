@@ -54,9 +54,19 @@ input[type="submit"]:hover {
     background-color: #3f51b5;
 }
 
-.error-messages,
+.error-messages {
+    color: red;
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    text-align: center; /* Sentrer teksten */
+    width: 100%;
+    max-width: 400px; /* Samme bredde som form-container for å linje opp */
+}
+
+
 .success-messages {
-    color: red; /* Bruk grønn for success-messages om nødvendig */
+    color: green; /* Bruk grønn for success-messages om nødvendig */
     font-size: 0.9em;
     margin-top: -10px;
     margin-bottom: 20px;

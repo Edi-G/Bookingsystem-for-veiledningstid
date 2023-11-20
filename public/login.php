@@ -11,10 +11,10 @@
     <h2>Logg Inn</h2>
     <form method="post" action="login.php">
         <label for="email">E-post:</label>
-        <input type="email" id="email" name="email" placeholder="E-post" required>
+        <input type="email" id="email" name="email" placeholder="E-post">
 
         <label for="password">Passord:</label>
-        <input type="password" id="password" name="password" placeholder="Passord" required>
+        <input type="password" id="password" name="password" placeholder="Passord">
 
         <input type="submit" name="login" value="Logg Inn">
     </form>
@@ -48,10 +48,10 @@
                 header('Location: dashboard.php');
                 exit;
             } else {
-                setFlashMessage("Feil passord.");
+                echo "<div class='error-messages'>Feil brukernavn eller passord.</div>";
             }
         } else {
-            setFlashMessage("Brukeren finnes ikke.");
+            echo "<div class='error-messages'>Brukeren finnes ikke.</div>";
         }
         $existingUserQuery->close();
     }
