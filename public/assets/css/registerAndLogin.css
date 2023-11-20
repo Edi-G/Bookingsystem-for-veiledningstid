@@ -64,16 +64,20 @@ input[type="submit"]:hover {
     max-width: 400px; /* Samme bredde som form-container for å linje opp */
 }
 
+.success-messages {
+    display: block;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
 .success-messages {
-    color: green; /* Bruk grønn for success-messages om nødvendig */
-    font-size: 0.9em;
-    margin-top: -10px;
-    margin-bottom: 20px;
-    text-align: center; /* Sentrer teksten */
-    width: 100%;
-    max-width: 400px; /* Samme bredde som form-container for å linje opp */
+    background-color: #ddffdd;
+    border: 1px solid #00b300;
+    color: #006600;
 }
+
 
 label {
     display: block;

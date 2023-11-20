@@ -82,7 +82,9 @@ if (isset($_POST['registrer'])) {
         $insertUserQuery = $connection->prepare("INSERT INTO users (Email, Password, FullName, Role) VALUES (?, ?, ?, ?)");
         $insertUserQuery->bind_param("ssss", $email, $passwordHash, $fullname, $role);
         if ($insertUserQuery->execute()) {
-            $successMsg = "Ny bruker er registrert.";
+            setFlashMessage("<div class='success-messages'>Ny bruker er registrert!</div>");
+            header('Location: login.php');
+            exit;
         } else {
             $errorMsg[] = "Det oppstod en feil under registrering.";
         }
@@ -97,11 +99,6 @@ if (!empty($errorMsg)) {
         echo htmlspecialchars($error) . "<br>";
     }
     echo "</div>";
-}
-
-// Vis suksessmelding hvis brukeren er registrert
-if ($successMsg !== '') {
-    echo htmlspecialchars($successMsg);
 }
 ?>
 
