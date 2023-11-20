@@ -1,0 +1,10 @@
+# Forhindrer visning av .htaccess og .php-filer direkte
+<FilesMatch "\.(htaccess|php)$">
+    Require all granted
+</FilesMatch>
+
+# Omdiriger alle forespørsler til index.php
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

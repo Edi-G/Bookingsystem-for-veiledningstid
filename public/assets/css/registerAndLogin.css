@@ -1,0 +1,81 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Stabler elementene vertikalt */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px; /* Gi litt plass mellom skjemaet og feilmeldingene */
+}
+
+.form-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px; 
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+select,
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #5c6bc0;
+    color: white;
+    cursor: pointer;
+    border: none;
+    margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #3f51b5;
+}
+
+.error-messages,
+.success-messages {
+    color: red; /* Bruk grønn for success-messages om nødvendig */
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    text-align: center; /* Sentrer teksten */
+    width: 100%;
+    max-width: 400px; /* Samme bredde som form-container for å linje opp */
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+    .form-container,
+    .error-messages,
+    .success-messages {
+        width: 90%;
+    }
+}
+
+
