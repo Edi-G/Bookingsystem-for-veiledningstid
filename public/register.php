@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registrering av bruker</title>
-    <link rel="stylesheet" href="assets/css/registerAndLogin.css">
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
 

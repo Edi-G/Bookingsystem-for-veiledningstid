@@ -5,15 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Logg Inn</title>
-    <link rel="stylesheet" href="assets/css/registerAndLogin.css">
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-
-<div class="message-container">
-    <?php
-    displayFlashMessage();
-    ?>
-</div>
 
 <div class="form-container">
     <h2>Logg Inn</h2>
@@ -51,7 +45,7 @@
                 $_SESSION['loggedin'] = true;
                 $_SESSION['userid'] = $user['UserID'];
                 $_SESSION['role'] = $user['Role'];
-                // Omdiriger til brukerdashboard eller annen side
+                // Omdiriger til brukerdashboard
                 header('Location: dashboard.php');
                 exit;
             } else {
