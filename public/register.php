@@ -19,8 +19,8 @@
         <label for="fullname">Fullt Navn:</label>
         <input type="text" id="fullname" name="fullname" placeholder="Fullt Navn" value="<?php echo isset($_POST['fullname']) ? htmlspecialchars($_POST['fullname']) : ''; ?>">
 
-        <label for="role">Rolle:</label>
-        <select id="role" name="role">
+        <label for="Role">Rolle:</label>
+        <select id="Role" name="Role">
             <option value="student">Student</option>
             <option value="hjelpelærer">Hjelpelærer</option>
         </select>
@@ -41,7 +41,7 @@ if (isset($_POST['registrer'])) {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $fullname = trim($_POST['fullname']);
-    $role = $_POST['role'];
+    $role = $_POST['Role'];
 
     // Validering
     if (empty($email)) {

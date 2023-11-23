@@ -21,6 +21,12 @@ $connection = $dbInstance->connect();
 // Opprette en Booking-instans
 $bookingInstance = new Booking($connection);
 
+// Oppretter en instans av User-instans
+$userInstance = new User($connection);
+
+// Oppretter en instans av Course-instans
+$courseInstance = new Course($connection);
+
 // Sesjonskontrollfunksjoner
 function checkLoggedIn() {
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -29,7 +35,7 @@ function checkLoggedIn() {
 }
 
 function checkRole($role) {
-    if (!isset($_SESSION['role']) || $_SESSION['role'] !== $role) {
+    if (!isset($_SESSION['Role']) || $_SESSION['role'] !== $role) {
         // Håndterer uautorisert tilgang
         redirect('/public/error.php'); // Må endres til feilsiden
     }

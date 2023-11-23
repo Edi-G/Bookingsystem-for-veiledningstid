@@ -13,12 +13,118 @@ body {
 .form-container {
     background-color: #fff;
     padding: 20px;
+    padding-bottom: 40px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 400px;
     margin-bottom: 20px; /* Gi litt plass mellom skjemaet og feilmeldingene */
+    position: relative; /* Needed for absolute positioning of children if needed */
+
 }
+
+
+/* PROFILE VIEW */
+.checkbox-dropdown {
+    width: 70%; /* Adjust this to your desired width, or keep it at 100% for full width */
+    border: 1px solid #aaa;
+    padding: 10px;
+    position: relative;
+    user-select: none;
+    margin-top: 20px; /* Space above dropdown */
+    cursor: pointer; /* Make it look clickable */
+    background: #fff; /* Set a background color for the dropdown button */
+    /* More styles here */
+}
+
+/* Display CSS arrow to the right of the dropdown text */
+.checkbox-dropdown:after {
+    content:'';
+    height: 0;
+    position: absolute;
+    width: 0;
+    border: 6px solid transparent;
+    border-top-color: #000;
+    top: 50%;
+    right: 10px;
+    margin-top: -3px;
+}
+
+/* Reverse the CSS arrow when the dropdown is active */
+.checkbox-dropdown.is-active:after {
+    border-bottom-color: #000;
+    border-top-color: #fff;
+    margin-top: -9px;
+}
+
+.checkbox-dropdown-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 100%;
+    border: inherit;
+    border-top: none;
+    left: -1px;
+    right: -1px;
+    opacity: 0;
+    background: #fff; /* Set a background color */
+    transition: opacity 0.4s ease-in-out;
+    max-height: 100px; /* Set max-height instead of height for better control */
+    overflow: auto; /* Enables scrolling */
+    pointer-events: none;
+    z-index: 10; /* Ensure it's above other elements */
+}
+.is-active .checkbox-dropdown-list {
+    opacity: 5; /* display the dropdown */
+    pointer-events: auto; /* make sure that the user still can select checkboxes */
+}
+
+.checkbox-dropdown-list li label {
+    display: block;
+    border-bottom: 1px solid silver;
+    padding: 10px;
+    background: #fff; /* Set a background color */
+    transition: all 0.2s ease-out;
+}
+
+.checkbox-dropdown-list li label:hover {
+    background-color: #555;
+    color: white;
+}
+  
+  /* Style the button */
+.btn {
+    padding: 10px 20px;
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px; /* To ensure it doesn't stick to the input above */
+}
+
+.btn:hover {
+    background-color: #3f51b5;
+}
+
+/* Ensure that the last form-group (where the button is) always sticks to the bottom */
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.form-container .form-group:last-child {
+    margin-top: auto; /* This will push the button to the bottom */
+}
+
+textarea {
+    resize: none; /* Forhindrer endring av størrelse */
+    max-height: 150px;
+    width: 100%; /* Sørger for at textarea fyller bredden til sin container */
+}
+/* PROFILE VIEW */
+
 
 .form-container h2 {
     text-align: center;
@@ -91,5 +197,3 @@ label {
         width: 90%;
     }
 }
-
-

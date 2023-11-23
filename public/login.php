@@ -27,7 +27,6 @@
 </div>
 
 <div class="message-container">
-    
 <?php
     if (isset($_POST['login'])) {
         $email = trim($_POST['email']);
@@ -43,8 +42,8 @@
             if (password_verify($password, $user['Password'])) {
                 // Passord er korrekt, opprett brukersesjon
                 $_SESSION['loggedin'] = true;
-                $_SESSION['userid'] = $user['UserID'];
-                $_SESSION['role'] = $user['Role'];
+                $_SESSION['UserID'] = $user['UserID'];
+                $_SESSION['Role'] = $user['Role'];
                 // Omdiriger til brukerdashboard
                 header('Location: dashboard.php');
                 exit;
