@@ -6,14 +6,14 @@ require_once __DIR__ . '/../../private/config/init.php';
 // Sjekker om brukeren er logget inn, hvis ikke, omdiriger til loginsiden.
 checkLoggedIn();
 
-// Initialize selectedCourses array
+// Initialiserer selectedCourses array
 $selectedCourses = [];
 
-// Only fetch courses if the user is an assistant teacher
+// Bare hent courses hvis brukeren er en hjelpelærer
 if ($_SESSION['Role'] === 'hjelpelærer') {
     $assistantTeacherId = $_SESSION['UserID']; 
     
-    // Fetch selected courses for the assistant teacher
+    // Hent valgte courses for hjelpelæreren
     $stmt = $connection->prepare("SELECT CourseID FROM assistantteachercourses WHERE AssistantTeacherID = ?");
     $stmt->bind_param("i", $assistantTeacherId);
     $stmt->execute();
@@ -26,7 +26,7 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
 
 // Håndterer form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Update profile information
+    // Oppdater profil informasjon
     if (isset($_POST['name'], $_POST['email'])) {
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -37,21 +37,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $flashMessage = $updateResult ? "Profilinformasjon oppdatert. " : "Feil ved oppdatering av profilinformasjon. ";
     }
 
-    // Update courses if an assistant teacher and the course selection has been posted
+    // Oppdater courses hvis en hjelpelærer og de valgte fagene har blitt posta
     if ($_SESSION['Role'] === 'hjelpelærer') {
         $assistantTeacherId = $_SESSION['UserID']; 
 
-        // Start a transaction
+        // Start en transaksjon
         $connection->begin_transaction();
 
     try {
-        // Delete the current courses related to the assistant teacher
+        // Slett de nåværende courses relatert til hjelpelæreren
         $stmt = $connection->prepare("DELETE FROM assistantteachercourses WHERE AssistantTeacherID = ?");
         $stmt->bind_param("i", $assistantTeacherId);
         $stmt->execute();
         $stmt->close();
 
-        // If any new courses are selected, insert them into the database
+        // Hvis noen nye courses er valgt, legg dem inn i databasen
         if (isset($_POST['course'])) {
             $stmt = $connection->prepare("INSERT INTO assistantteachercourses (AssistantTeacherID, CourseID) VALUES (?, ?)");
             foreach ($_POST['course'] as $courseId) {
@@ -61,17 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
         }
 
-        // Commit the transaction
+        // Gjennomfør transaksjonen
         $connection->commit();
         setFlashMessage("Courses updated successfully.");
     } catch (mysqli_sql_exception $exception) {
-        // An error occurred, roll back the transaction
+        // En feil oppstod, avbryt transaksjonen
         $connection->rollback();
         setFlashMessage("An error occurred while updating courses.");
     }
 }
 
-    // After all updates, set a flash message and redirect
+    // Etter alle oppdateringer, sett en flash melding og omdiriger
     setFlashMessage("Profil oppdatert.");
     header("Location: profile.php");
     exit;

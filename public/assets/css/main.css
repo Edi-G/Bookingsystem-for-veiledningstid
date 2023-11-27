@@ -18,26 +18,25 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 400px;
-    margin-bottom: 20px; /* Gi litt plass mellom skjemaet og feilmeldingene */
-    position: relative; /* Needed for absolute positioning of children if needed */
+    margin-bottom: 20px; 
+    position: relative; 
 
 }
 
 
 /* PROFILE VIEW */
 .checkbox-dropdown {
-    width: 70%; /* Adjust this to your desired width, or keep it at 100% for full width */
+    width: 70%; /* Justerer ønsket bredde, eller behold den på 100 % for full bredde */
     border: 1px solid #aaa;
     padding: 10px;
     position: relative;
     user-select: none;
-    margin-top: 20px; /* Space above dropdown */
-    cursor: pointer; /* Make it look clickable */
-    background: #fff; /* Set a background color for the dropdown button */
-    /* More styles here */
+    margin-top: 20px; /* Mellomrom over dropdown-menyen */
+    cursor: pointer; /* Får den til å se klikkbar ut */
+    background: #fff; /* Bakrunn for dropdown knappen */
 }
 
-/* Display CSS arrow to the right of the dropdown text */
+/* CSS pil til høyre for dropdown knappen */
 .checkbox-dropdown:after {
     content:'';
     height: 0;
@@ -50,7 +49,7 @@ body {
     margin-top: -3px;
 }
 
-/* Reverse the CSS arrow when the dropdown is active */
+/* Reverserer CSS pilen nå dropdown-menyen er aktiv */
 .checkbox-dropdown.is-active:after {
     border-bottom-color: #000;
     border-top-color: #fff;
@@ -68,23 +67,23 @@ body {
     left: -1px;
     right: -1px;
     opacity: 0;
-    background: #fff; /* Set a background color */
+    background: #fff;
     transition: opacity 0.4s ease-in-out;
-    max-height: 100px; /* Set max-height instead of height for better control */
-    overflow: auto; /* Enables scrolling */
+    max-height: 100px; /* Sett maks-høyde i stedet for høyde for bedre kontroll */
+    overflow: auto; /* Gjør at man kan skrolle */
     pointer-events: none;
-    z-index: 10; /* Ensure it's above other elements */
+    z-index: 10; /* Sikrer at den er over andre elementer */
 }
 .is-active .checkbox-dropdown-list {
-    opacity: 5; /* display the dropdown */
-    pointer-events: auto; /* make sure that the user still can select checkboxes */
+    opacity: 5; /* vis droppdown-menyen */
+    pointer-events: auto; /* Sikrer at brukeren fortsatt kan krysse av boksene*/
 }
 
 .checkbox-dropdown-list li label {
     display: block;
     border-bottom: 1px solid silver;
     padding: 10px;
-    background: #fff; /* Set a background color */
+    background: #fff; 
     transition: all 0.2s ease-out;
 }
 
@@ -93,21 +92,21 @@ body {
     color: white;
 }
   
-  /* Style the button */
+  
 .btn {
     padding: 10px 20px;
     background-color: #5c6bc0;
     color: white;
     border: none;
     cursor: pointer;
-    margin-top: 20px; /* To ensure it doesn't stick to the input above */
+    margin-top: 20px; /* For at den ikke skal sitte fast til elementer over*/
 }
 
 .btn:hover {
     background-color: #3f51b5;
 }
 
-/* Ensure that the last form-group (where the button is) always sticks to the bottom */
+/* Sørg for at den siste skjemagruppen (der knappen er) alltid holder seg til bunnen */
 .form-container form {
     display: flex;
     flex-direction: column;
@@ -115,7 +114,7 @@ body {
 }
 
 .form-container .form-group:last-child {
-    margin-top: auto; /* This will push the button to the bottom */
+    margin-top: auto; /* Dytter button til bunnen */
 }
 
 textarea {
