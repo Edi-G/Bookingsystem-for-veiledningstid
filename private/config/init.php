@@ -10,21 +10,21 @@ define('DB_NAME', 'veiledning_system');
 
 // Autoloader for klasser
 spl_autoload_register(function ($class_name) {
-    // Korrigerer stien for å gå opp til "private" mappen og deretter inn i "classes"
+    // Sti for å gå opp til "private" mappen og deretter inn i "classes"
     require_once __DIR__ . '/../classes/' . $class_name . '.php';
 });
 
-// Opprette en databaseforbindelse
+// Opprette databaseforbindelse
 $dbInstance = new Database();
 $connection = $dbInstance->connect();
 
-// Opprette en Booking-instans
+// Opprette Booking-instans
 $bookingInstance = new Booking($connection);
 
-// Oppretter en User-instans
+// Oppretter User-instans
 $userInstance = new User($connection);
 
-// Oppretter en Course-instans
+// Oppretter Course-instans
 $courseInstance = new Course($connection);
 
 // Sesjonskontrollfunksjoner
@@ -55,7 +55,7 @@ function setFlashMessage($message) {
 function displayFlashMessage() {
     if (isset($_SESSION['flash_message'])) {
         echo $_SESSION['flash_message'];
-        unset($_SESSION['flash_message']); // Fjern meldingen etter visning
+        unset($_SESSION['flash_message']); // Fjerner meldingen etter visning
     }
 }
 

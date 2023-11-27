@@ -7,7 +7,7 @@ class Booking {
         $this->db = $dbConnection;
     }
 
-    // Metode for å booke en veiledningstime
+    // Booke en veiledningstime
     public function createBooking($studentId, $assistantTeacherId, $courseId, $startTime, $endTime) {
         $query = "INSERT INTO bookings (StudentID, AssistantTeacherID, CourseID, StartTime, EndTime, Status) VALUES (?, ?, ?, ?, ?, 'confirmed')";
         $stmt = $this->db->prepare($query);
@@ -27,7 +27,7 @@ class Booking {
         }
     }
 
-    // Metode for å hente alle bookinger for en bestemt bruker
+    // Hente alle bookinger for en bestemt bruker
     public function getBookingsByUserId($userId, $role) {
         if ($role == 'student') {
             $query = "SELECT * FROM bookings WHERE StudentID = ?";
@@ -52,7 +52,7 @@ class Booking {
         return $bookings;
     }
 
-    // Metode for å avbryte en booking
+    // Avbryte en booking
     public function cancelBooking($bookingId) {
         $query = "UPDATE bookings SET Status = 'cancelled' WHERE BookingID = ?";
         $stmt = $this->db->prepare($query);
@@ -71,7 +71,7 @@ class Booking {
         }
     }
 
-    // Metode for å endre bookingtid
+    // Endre bookingtid
     public function updateBookingTime($bookingId, $newStartTime, $newEndTime) {
         $query = "UPDATE bookings SET StartTime = ?, EndTime = ? WHERE BookingID = ?";
         $stmt = $this->db->prepare($query);
@@ -91,7 +91,7 @@ class Booking {
         }
     }
 
-    // Metode for å hente en spesifikk booking
+    // Hente spesifikk booking
     public function getBookingById($bookingId) {
         $query = "SELECT * FROM bookings WHERE BookingID = ?";
         $stmt = $this->db->prepare($query);

@@ -131,7 +131,7 @@ class User {
             return $details;
         } else {
             $stmt->close();
-            return null; // Eller en tom array, avhengig av hva som passer best i din applikasjon
+            return null; 
         }
     }
 }

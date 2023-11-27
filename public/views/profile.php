@@ -3,7 +3,7 @@
 <?php
 require_once __DIR__ . '/../../private/config/init.php';
 
-// Sjekker om brukeren er logget inn, hvis ikke, omdiriger til loginsiden.
+// Innloggings sjekk, omdirigerer hvis ikke logget inn
 checkLoggedIn();
 
 // Initialiserer selectedCourses array
@@ -102,7 +102,7 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
 <div class="form-container">
     <h2>Profil</h2>
     <form method="post">
-    <!-- Delt informasjon for alle brukere -->
+        <!-- Delt informasjon for alle brukere -->
         <div class="form-group">
             <label for="name">Navn:</label>
             <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($userInfo['FullName']); ?>">
@@ -113,8 +113,8 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userInfo['Email']); ?>">
         </div>
 
-        <?php if ($_SESSION['Role'] === 'hjelpelærer'): ?>
         <!-- Spesifikk informasjon for hjelpelærere -->
+        <?php if ($_SESSION['Role'] === 'hjelpelærer'): ?>
         <div class="form-group">
             <label for="experience">Erfaring:</label>
             <textarea id="experience" name="experience"><?php echo isset($assistantDetails['Experience']) ? htmlspecialchars($assistantDetails['Experience']) : ''; ?></textarea>
