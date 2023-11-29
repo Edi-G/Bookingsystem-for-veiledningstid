@@ -1,5 +1,5 @@
 <?php
-// Start session management
+// Start sesjon 
 session_start();
 
 // Databasekonfigurasjonsparametre
@@ -9,9 +9,9 @@ define('DB_PASS', '');
 define('DB_NAME', 'veiledning_system');
 
 // Autoloader for klasser
-spl_autoload_register(function ($class_name) {
+spl_autoload_register(function ($className) {
     // Sti for å gå opp til "private" mappen og deretter inn i "classes"
-    require_once __DIR__ . '/../classes/' . $class_name . '.php';
+    require_once __DIR__ . '/../classes/' . $className . '.php';
 });
 
 // Opprette databaseforbindelse

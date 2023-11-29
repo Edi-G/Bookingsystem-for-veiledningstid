@@ -17,7 +17,7 @@ class User {
         return $result->fetch_assoc();
     }
 
-    // Returnerer en liste over hjelpelærere for et spesifikt kurs
+    // Returnerer liste over hjelpelærere for et spesifikt kurs
     public function getAssistantsByCourse($courseId) {
         $query = "SELECT u.* FROM users u 
                   JOIN assistantteachercourses atc ON u.UserID = atc.AssistantTeacherID 
@@ -41,14 +41,14 @@ class User {
 
     // Oppdaterer brukerinformasjon
     public function updateUser($userId, $name = null, $email = null, $experience = null, $specializations = null) {
-        // Sjekk først om e-posten er unik (med unntak av den nåværende brukeren)
+        // Sjekk om e-posten er unik
         $checkQuery = "SELECT * FROM users WHERE Email = ? AND UserID != ?";
         $checkStmt = $this->db->prepare($checkQuery);
         $checkStmt->bind_param("si", $email, $userId);
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
         if ($checkResult->num_rows > 0) {
-        // E-postadressen er allerede i bruk av en annen bruker
+        // E-post ikke tilgjengelig
         $checkStmt->close();
         throw new Exception("E-postadressen er allerede i bruk.");
     }

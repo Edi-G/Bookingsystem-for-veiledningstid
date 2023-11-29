@@ -9,11 +9,11 @@ checkLoggedIn();
 // Initialiserer selectedCourses array
 $selectedCourses = [];
 
-// Bare hent courses hvis brukeren er en hjelpelærer
+// Bare hent kurs hvis brukeren er en hjelpelærer
 if ($_SESSION['Role'] === 'hjelpelærer') {
     $assistantTeacherId = $_SESSION['UserID']; 
     
-    // Hent valgte courses for hjelpelæreren
+    // Hent valgte kurs for hjelpelæreren
     $stmt = $connection->prepare("SELECT CourseID FROM assistantteachercourses WHERE AssistantTeacherID = ?");
     $stmt->bind_param("i", $assistantTeacherId);
     $stmt->execute();
@@ -24,7 +24,7 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
     $stmt->close();
 }
 
-// Håndterer form submission
+// Skjemabehandling
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Oppdater profil informasjon
     if (isset($_POST['name'], $_POST['email'])) {
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $flashMessage = $updateResult ? "Profilinformasjon oppdatert. " : "Feil ved oppdatering av profilinformasjon. ";
     }
 
-    // Oppdater courses hvis en hjelpelærer og de valgte fagene har blitt posta
+    // Oppdater kursene hvis en hjelpelærer og de valgte kursene har blitt sendt inn
     if ($_SESSION['Role'] === 'hjelpelærer') {
         $assistantTeacherId = $_SESSION['UserID']; 
 
@@ -45,13 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $connection->begin_transaction();
 
     try {
-        // Slett de nåværende courses relatert til hjelpelæreren
+        // Slett de nåværende kursene relatert til hjelpelæreren
         $stmt = $connection->prepare("DELETE FROM assistantteachercourses WHERE AssistantTeacherID = ?");
         $stmt->bind_param("i", $assistantTeacherId);
         $stmt->execute();
         $stmt->close();
 
-        // Hvis noen nye courses er valgt, legg dem inn i databasen
+        // Hvis noen nye kurs er valgt, legg dem inn i databasen
         if (isset($_POST['course'])) {
             $stmt = $connection->prepare("INSERT INTO assistantteachercourses (AssistantTeacherID, CourseID) VALUES (?, ?)");
             foreach ($_POST['course'] as $courseId) {
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Henter brukerinformasjonen basert på session
+// Henter brukerinformasjonen basert på sesjon
 $userInfo = $userInstance->getUserById($_SESSION['UserID']);
 
 // Henter tilleggsinformasjon avhengig av rollen
