@@ -1,0 +1,6 @@
+# Aktiver mod_rewrite
+RewriteEngine On
+
+# Omdiriger all trafikk til public-mappen
+RewriteRule ^$ public/    [L]
+RewriteRule (.*) public/$1 [L]
