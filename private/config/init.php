@@ -33,7 +33,7 @@ $messageInstance = new Message($connection);
 // Sesjonskontrollfunksjoner
 function checkLoggedIn() {
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-        redirect('/public/login.php');
+        redirect('../login.php');
     }
 }
 

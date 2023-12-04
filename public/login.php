@@ -1,38 +1,28 @@
-<?php require_once __DIR__ . '/../private/config/init.php'; ?>
+<?php 
+require_once __DIR__ . '/../private/config/init.php';
 
-<!DOCTYPE html>
-<html lang="no">
-<head>
-    <meta charset="UTF-8">
-    <title>Logg Inn</title>
-    <link rel="stylesheet" href="assets/css/main.css">
-</head>
-<body>
+$errorMsg = array();
 
-<div class="form-container">
-    <h2>Logg Inn</h2>
-    <form method="post" action="login.php">
-        <label for="email">E-post:</label>
-        <input type="email" id="email" name="email" placeholder="E-post" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+// A function to display error message for a specific field
+function displayErrorMessage($errors, $fieldName) {
+    if (isset($errors[$fieldName])) {
+        echo "<div class='error-messages'>" . htmlspecialchars($errors[$fieldName]) . "</div>";
+    }
+}
 
-        <label for="password">Passord:</label>
-        <input type="password" id="password" name="password" placeholder="Passord">
+if (isset($_POST['login'])) {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
 
-        <input type="submit" name="login" value="Logg Inn">
-    </form>
+    if (empty($email)) {
+        $errorMsg['email'] = 'E-post må oppgis.';
+    }
 
-    <div class="register-link">
-        Har du ikke en konto? <a href="register.php">Opprett en bruker</a>
-    </div>
-</div>
+    if (empty($password)) {
+        $errorMsg['password'] = 'Passord må oppgis.';
+    }
 
-<div class="message-container">
-<?php
-    if (isset($_POST['login'])) {
-        $email = trim($_POST['email']);
-        $password = $_POST['password'];
-
-        // Sjekk mot databasen
+    if (empty($errorMsg)) {
         $existingUserQuery = $connection->prepare("SELECT * FROM users WHERE Email = ?");
         $existingUserQuery->bind_param("s", $email);
         $existingUserQuery->execute();
@@ -44,19 +34,49 @@
                 $_SESSION['loggedin'] = true;
                 $_SESSION['UserID'] = $user['UserID'];
                 $_SESSION['Role'] = $user['Role'];
-                // Omdiriger til brukerdashboard
-                header('Location: dashboard.php');
+                header('Location: views/profile.php');
                 exit;
             } else {
-                echo "<div class='error-messages'>Feil brukernavn eller passord.</div>";
+                $errorMsg['login'] = 'Feil brukernavn eller passord.';
             }
         } else {
-            echo "<div class='error-messages'>Oppgi en gyldig e-postadresse.</div>";
+            $errorMsg['login'] = 'Feil brukernavn eller passord.';
         }
         $existingUserQuery->close();
     }
+}
 ?>
 
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Logg Inn</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<div class="form-container">
+    <h2>Logg Inn</h2>
+
+    <form method="post" action="login.php">
+        <label for="email">E-post:</label>
+        <input type="email" id="email" name="email" placeholder="E-post" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+        <?php displayErrorMessage($errorMsg, 'email'); ?>
+
+        <label for="password">Passord:</label>
+        <input type="password" id="password" name="password" placeholder="Passord">
+        <?php displayErrorMessage($errorMsg, 'password'); ?>
+
+        <div class="error-message-placeholder">
+        <?php displayErrorMessage($errorMsg, 'login'); ?>
+        </div>
+
+        <input type="submit" name="login" value="Logg Inn">
+
+        <div class="register-link">
+        Har du ikke en konto? <a href="register.php">Opprett en bruker</a>
+        </div>
+    </form>
 </div>
 </body>
 </html>

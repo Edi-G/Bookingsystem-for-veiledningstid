@@ -162,12 +162,17 @@ input[type="submit"]:hover {
 .error-messages {
     color: red;
     font-size: 0.9em;
-    margin-top: -10px;
-    margin-bottom: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     text-align: center; /* Sentrer teksten */
     width: 100%;
     max-width: 400px; /* Samme bredde som form-container for å linje opp */
 }
+
+.register-link {
+    margin-top: 50px;
+}
+
 
 .success-messages {
     display: block;
