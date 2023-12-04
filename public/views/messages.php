@@ -1,13 +1,30 @@
 <?php
 require_once __DIR__ . '/../../private/config/init.php';
 
-// Bruk Message-instans til å sende og hente meldinger
-$messageInstance = new Message($dbConnection);
+// Innloggings sjekk, omdirigerer hvis ikke logget inn
+checkLoggedIn();
 
-// Hent og vis meldinger for en bestemt bruker
-$userId = 1;
+// Hent meldinger for den innloggede brukeren (for eksempel bruker med ID = 1)
+$userId = $_SESSION['UserID'];
 $userMessages = $messageInstance->getMessagesByUserId($userId);
 
+// Skjemabehandling for å sende meldinger
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['receiverId'], $_POST['messageContent'])) {
+        $senderId = $_SESSION['UserID'];
+        $receiverId = $_POST['receiverId'];
+        $messageContent = $_POST['messageContent'];
+
+        $sendMessageResult = $messageInstance->sendMessage($senderId, $receiverId, $messageContent);
+
+        // Håndtere resultatet av å sende meldingen
+        if ($sendMessageResult) {
+            echo "Meldingen ble sendt vellykket.";
+        } else {
+            echo "Det oppstod en feil ved sending av meldingen.";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +36,7 @@ $userMessages = $messageInstance->getMessagesByUserId($userId);
 </head>
 <body>
 
-<div class="message-container">
+<div class="form-container">
     <h2>Meldinger</h2>
     <div class="message-list">
         <!-- Vis alle meldinger for brukeren -->
@@ -36,8 +53,7 @@ $userMessages = $messageInstance->getMessagesByUserId($userId);
 
     <div class="message-form">
         <!-- Skjema for å sende meldinger -->
-        <form id="messageForm" action="../../private/classes/Message.php" method="post">
-            <input type="hidden" name="senderId" value="<?= $userId ?>">
+        <form method="post">
             <div class="form-group">
                 <label for="receiverId">Mottaker ID:</label>
                 <input type="text" id="receiverId" name="receiverId">

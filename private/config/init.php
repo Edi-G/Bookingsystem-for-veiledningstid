@@ -27,6 +27,9 @@ $userInstance = new User($connection);
 // Oppretter Course-instans
 $courseInstance = new Course($connection);
 
+// Oppretter Message-instans
+$messageInstance = new Message($connection);
+
 // Sesjonskontrollfunksjoner
 function checkLoggedIn() {
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
