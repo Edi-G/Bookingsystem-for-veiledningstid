@@ -103,15 +103,38 @@ class User {
         }   
     }
 
-    // Oppdaterer tilgjengeligheten for en hjelpelærer
-    public function updateAvailability($assistantId, $day, $startTime, $endTime) {
-        $query = "UPDATE assistantteacheravailability 
-                  SET Day = ?, StartTime = ?, EndTime = ? 
-                  WHERE AssistantTeacherID = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param("sssi", $day, $startTime, $endTime, $assistantId);
-        return $stmt->execute();
+    // Legger til ny tilgjengelighet for en hjelpelærer
+    public function addAvailability($assistantId, $day, $startTime, $endTime)
+    {
+        // Sjekker først om det allerede finnes en tilgjengelighet for denne dagen
+        $checkQuery = "SELECT * FROM assistantteacheravailability WHERE AssistantTeacherID = ? AND Day = ?";
+        $checkStmt = $this->db->prepare($checkQuery);
+        $checkStmt->bind_param("is", $assistantId, $day);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+        $checkStmt->close();
+
+        // Hvis det finnes, oppdaterer den eksisterende posten
+        if ($result->num_rows > 0) {
+            $query = "UPDATE assistantteacheravailability SET StartTime = ?, EndTime = ? WHERE AssistantTeacherID = ? AND Day = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("ssis", $startTime, $endTime, $assistantId, $day);
+        } else {
+            // Hvis ikke, legger til en ny 
+            $query = "INSERT INTO assistantteacheravailability (AssistantTeacherID, Day, StartTime, EndTime) VALUES (?, ?, ?, ?)";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("isss", $assistantId, $day, $startTime, $endTime);
+        }
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true;
+        } else {
+            $stmt->close();
+            return false;
+        }
     }
+
 
     public function getAssistantDetails($assistantTeacherId) {
         $query = "SELECT * FROM assistantteacherdetails WHERE AssistantTeacherID = ?";

@@ -40,7 +40,7 @@ function checkLoggedIn() {
 function checkRole($role) {
     if (!isset($_SESSION['Role']) || $_SESSION['Role'] !== $role) {
         // Håndterer uautorisert tilgang
-        redirect('/public/login.php'); // Må endres til feilsiden eller beholde redirect til login-siden?
+        redirect('/public/login.php'); 
     }
 }
 

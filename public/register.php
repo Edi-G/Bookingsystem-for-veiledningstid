@@ -5,7 +5,7 @@ require_once __DIR__ . '/../private/config/init.php';
 $errorMsg = array();
 $successMsg = '';
 
-// A function to display error message for a specific field
+// Viser feilmelding for et spesifikt felt
 function displayErrorMessage($errors, $fieldName) {
     if (isset($errors[$fieldName])) {
         echo "<div class='error-messages'>" . htmlspecialchars($errors[$fieldName]) . "</div>";
@@ -35,7 +35,6 @@ if (isset($_POST['registrer'])) {
         $errorMsg['fullname'] = 'Fullt navn må oppgis.';
     }
 
-    // Valider at rollen er korrekt
     if ($role !== 'student' && $role !== 'hjelpelærer') {
         $errorMsg[] = 'Ugyldig rolle valgt.';
     }
@@ -67,7 +66,6 @@ if (isset($_POST['registrer'])) {
     }
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -79,7 +77,7 @@ if (isset($_POST['registrer'])) {
 </head>
 <body>
 
-<div class="form-container">
+<div class="form-loginandregister">
     <h2>Registrer ny bruker</h2>
     <form method="post" action="register.php">
         <label for="email">E-post:</label>

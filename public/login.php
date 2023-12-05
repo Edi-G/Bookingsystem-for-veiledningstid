@@ -3,7 +3,7 @@ require_once __DIR__ . '/../private/config/init.php';
 
 $errorMsg = array();
 
-// A function to display error message for a specific field
+// Viser feilmelding for et spesifikt felt
 function displayErrorMessage($errors, $fieldName) {
     if (isset($errors[$fieldName])) {
         echo "<div class='error-messages'>" . htmlspecialchars($errors[$fieldName]) . "</div>";
@@ -14,6 +14,7 @@ if (isset($_POST['login'])) {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
+    // Validering
     if (empty($email)) {
         $errorMsg['email'] = 'E-post må oppgis.';
     }
@@ -55,7 +56,7 @@ if (isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-<div class="form-container">
+<div class="form-loginandregister">
     <h2>Logg Inn</h2>
 
     <form method="post" action="login.php">

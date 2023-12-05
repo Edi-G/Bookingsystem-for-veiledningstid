@@ -10,7 +10,7 @@ body {
     height: 100vh;
 }
 
-.form-container {
+.form-loginandregister {
     background-color: #fff;
     padding: 20px;
     padding-bottom: 40px;
@@ -20,9 +20,100 @@ body {
     max-width: 400px;
     margin-bottom: 20px; 
     position: relative; 
-
 }
 
+.form-container, .availability-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: calc(50% - 20px); /* Splits the width evenly between the two children, accounting for 20px gap */
+    margin: 10px; /* Gir litt plass mellom seksjonene */
+}
+
+.container {
+    display: flex;
+    justify-content: space-between; /* Aligns children (form-container and availability-section) side by side */
+    align-items: flex-start; /* Aligns children at the top */
+    width: 100%;
+    max-width: 1000px; /* Adjust as necessary */
+    margin: auto; /* Center the container */
+    padding: 20px; /* Add some spacing */
+}
+
+/* Stilene under er for den nye tilgjengelighetsseksjonen og dens faner */
+.tabs {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.tab-link {
+    cursor: pointer;
+    padding: 10px;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}
+
+.tab-content {
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: none;
+}
+
+.current {
+    display: block; /* Viser gjeldende fane */
+}
+
+.time-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Adjust as needed */
+}
+
+.time-inputs label,
+.time-inputs input {
+    margin-right: 10px; /* Space between label and input */
+}
+
+.form-loginandregister h2, .form-container h2 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 50px; 
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+select,
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* Adjusted button styles for consistency */
+.btn, input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #475ac2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.btn:hover, input[type="submit"]:hover {
+    background-color: #2d40af;
+}
 
 /* PROFILE VIEW */
 .checkbox-dropdown {
@@ -69,7 +160,7 @@ body {
     opacity: 0;
     background: #fff;
     transition: opacity 0.4s ease-in-out;
-    max-height: 100px; /* Sett maks-høyde i stedet for høyde for bedre kontroll */
+    max-height: 200px; /* Sett maks-høyde i stedet for høyde for bedre kontroll */
     overflow: auto; /* Gjør at man kan skrolle */
     pointer-events: none;
     z-index: 10; /* Sikrer at den er over andre elementer */
@@ -91,73 +182,52 @@ body {
     background-color: #555;
     color: white;
 }
-  
-  
-.btn {
-    padding: 10px 20px;
-    background-color: #5c6bc0;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px; /* For at den ikke skal sitte fast til elementer over*/
-}
-
-.btn:hover {
-    background-color: #3f51b5;
-}
-
-/* Sørg for at den siste skjemagruppen (der knappen er) alltid holder seg til bunnen */
-.form-container form {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.form-container .form-group:last-child {
-    margin-top: auto; /* Dytter button til bunnen */
-}
 
 textarea {
     resize: none; /* Forhindrer endring av størrelse */
     max-height: 150px;
     width: 100%; /* Sørger for at textarea fyller bredden til sin container */
 }
-/* PROFILE VIEW */
 
-
-.form-container h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px; 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-input[type="date"],
-select,
-input[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+.update-booking-form {
+    background: #fff;
+    padding: 50px;
     border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
 }
 
-input[type="submit"] {
-    background-color: #5c6bc0;
-    color: white;
-    cursor: pointer;
-    border: none;
-    margin-top: 20px;
+.update-booking-form h2 {
+    margin-top: 50;
 }
 
-input[type="submit"]:hover {
-    background-color: #3f51b5;
+.close-button {
+    float: right;
+    padding: 5px 10px;
+    background: #444;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0px;
+    margin: -50px -50px 50px;
 }
+
+.close-button:hover {
+    background: #666;
+}
+
+/* PROFILE VIEW END */
 
 .error-messages {
     color: red;
@@ -173,21 +243,16 @@ input[type="submit"]:hover {
     margin-top: 50px;
 }
 
-
 .success-messages {
     display: block;
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.success-messages {
     background-color: #ddffdd;
     border: 1px solid #00b300;
     color: #006600;
 }
-
 
 label {
     display: block;
@@ -199,5 +264,23 @@ label {
     .error-messages,
     .success-messages {
         width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-container, .availability-section {
+        width: 100%;
+        margin: 10px 0;
+        padding: 20px;
+        box-shadow: none;
+    }
+
+    .tabs .tab-link {
+        padding: 5px;
     }
 }

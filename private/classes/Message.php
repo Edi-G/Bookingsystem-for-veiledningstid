@@ -29,7 +29,7 @@ class Message {
 
     // Hent alle meldinger for en bestemt bruker
     public function getMessagesByUserId($userId) {
-        $query = "SELECT * FROM messages WHERE ReceiverID = ?";
+        $query = "SELECT * FROM messages WHERE RecieverID = ?";
         $stmt = $this->db->prepare($query);
 
         if ($stmt === false) {
