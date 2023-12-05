@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include("../templates/navbar.php"); ?>
     <div class="message-container">
         <div class="message-list">
-            <h2 style="padding-left: 20px;">Inboks</h2>
+            <h2 style="padding-left: 20px;">Innboks</h2>
             <ul>
                 <?php foreach ($userMessages as $message) : ?>
                     <li>
