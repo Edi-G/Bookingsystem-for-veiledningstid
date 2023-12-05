@@ -8,7 +8,6 @@ checkLoggedIn();
 $userId = $_SESSION['UserID'];
 $userMessages = $messageInstance->getMessagesByUserId($userId);
 
-
 // Skjemabehandling for å sende meldinger
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['receiverId'], $_POST['messageContent'])) {
@@ -42,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Meldinger</title>
     <link rel="stylesheet" href="../assets/css/main.css">
+    <!-- Bruker SweetAlert2 for popup -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
         .message-container {
             width: 70%;
@@ -108,10 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <?php include("../templates/navbar.php"); ?>
+    
     <div class="message-container">
         <div class="message-list">
             <h2 style="padding-left: 20px;">Innboks</h2>
-            <form method="post"> <!-- Legg til et skjema for å markere meldinger som lest -->
+            <form method="post">
                 <ul>
                     <?php foreach ($userMessages as $message) : ?>
                         <li>
@@ -140,6 +142,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
+
+    <script>
+        // JavaScript for å vise popup-melding etter at knappen er trykket
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+
+            // Lytter etter skjemainnsending
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Forhindrer vanlig innsending
+
+                // Finn alle valgte checkboxer
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+                // Hvis minst én checkbox er valgt
+                if (checkboxes.length > 0) {
+                    // Viser popup-melding ved hjelp av SweetAlert
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Meldinger markert som lest!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        form.submit(); // Sender skjemaet etter popup-meldingen vises
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
