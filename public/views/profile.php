@@ -4,20 +4,20 @@
 
 require_once __DIR__ . '/../../private/config/init.php';
 
-// Check if the user is logged in
+// Innloggings sjekk, hvis ikke omdiringeres det
 checkLoggedIn();
 
-// Get the current user's information based on the session
+// Hent brukrens info basert på sesjon 
 $userInfo = $userInstance->getUserById($_SESSION['UserID']);
 
 // Initialiserer selectedCourses array
 $selectedCourses = [];
 
-// Process form submissions
+// Skjemabehandling
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['update_availability'])) {
-        // Process availability update
+        // Prosseserer tilgjengelighets oppdatering 
         $day = filter_input(INPUT_POST, 'day');
         $startTime = filter_input(INPUT_POST, 'startTime');
         $endTime = filter_input(INPUT_POST, 'endTime');
@@ -34,22 +34,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Check if the edit booking time form is submitted
+    // Handle the edit booking request
     if (isset($_POST['edit_booking'])) {
-        $bookingIdToEdit = $_POST['booking_id'];
-        $bookingDetails = $bookingInstance->getBookingById($bookingIdToEdit);
+        $_SESSION['bookingIdToEdit'] = $_POST['booking_id'];
+        header('Location: profile.php');
+        exit;
     }
-
+    
     if (isset($_POST['update_booking_time'])) {
         $bookingId = $_POST['booking_id'];
         $newStartTime = $_POST['newStartTime'];
         $newEndTime = $_POST['newEndTime'];
-    
-        // Validate and format the date and time
+
+        // Validerer og formaterer dato og tidV
         $newStartTimeFormatted = date('Y-m-d H:i:s', strtotime($newStartTime));
         $newEndTimeFormatted = date('Y-m-d H:i:s', strtotime($newEndTime));
-    
-        // Now use these formatted times in your update query
+
         if ($bookingInstance->updateBookingTime($bookingId, $newStartTimeFormatted, $newEndTimeFormatted)) {
             setFlashMessage("Booking time updated.");
         } else {
@@ -65,14 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cancelSuccess = $bookingInstance->cancelBooking($bookingId);
 
         if ($cancelSuccess) {
-            // Set success message
+            // Suksess melding
             setFlashMessage("Booking cancelled.");
         } else {
-            // Set error message
+            // Error melding
             setFlashMessage("Error cancelling booking.");
         }
 
-        // Redirect to refresh the data on the page
+        // Omdirigerer Redirect to refresh the data on the page
         header('Location: profile.php');
         exit;
     }
@@ -86,61 +86,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $updateResult = $userInstance->updateUser($_SESSION['UserID'], $name, $email, $experience, $specializations);
         $flashMessage = $updateResult ? "Profilinformasjon oppdatert. " : "Feil ved oppdatering av profilinformasjon. ";
-
-        // Etter alle oppdateringer, sett en flash melding og omdiriger
-        setFlashMessage("Profil oppdatert.");
-        header("Location: profile.php");
-        exit;
     }
 
-    // Bare hent kurs hvis brukeren er en hjelpelærer
-    if ($_SESSION['Role'] === 'hjelpelærer') {
-        $assistantTeacherId = $_SESSION['UserID'];
+    if (isset($_POST['course'])) {
+        // Oppdater kursene hvis en hjelpelærer og de valgte kursene har blitt sendt inn
+        if ($_SESSION['Role'] === 'hjelpelærer') {
+            $assistantTeacherId = $_SESSION['UserID'];
 
-        // Hent valgte kurs for hjelpelæreren
-        $stmt = $connection->prepare("SELECT CourseID FROM assistantteachercourses WHERE AssistantTeacherID = ?");
-        $stmt->bind_param("i", $assistantTeacherId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $selectedCourses[] = $row['CourseID'];
-        }
-        $stmt->close();
-    }
+            // Start en transaksjon
+            $connection->begin_transaction();
 
-    // Oppdater kursene hvis en hjelpelærer og de valgte kursene har blitt sendt inn
-    if ($_SESSION['Role'] === 'hjelpelærer') {
-        $assistantTeacherId = $_SESSION['UserID'];
-
-        // Start en transaksjon
-        $connection->begin_transaction();
-
-        try {
-            // Slett de nåværende kursene relatert til hjelpelæreren
-            $stmt = $connection->prepare("DELETE FROM assistantteachercourses WHERE AssistantTeacherID = ?");
-            $stmt->bind_param("i", $assistantTeacherId);
-            $stmt->execute();
-            $stmt->close();
-
-            // Hvis noen nye kurs er valgt, legg dem inn i databasen
-            if (isset($_POST['course'])) {
-                $stmt = $connection->prepare("INSERT INTO assistantteachercourses (AssistantTeacherID, CourseID) VALUES (?, ?)");
-                foreach ($_POST['course'] as $courseId) {
-                    $stmt->bind_param("ii", $assistantTeacherId, $courseId);
-                    $stmt->execute();
-                }
+            try {
+                // Slett de nåværende kursene relatert til hjelpelæreren
+                $stmt = $connection->prepare("DELETE FROM assistantteachercourses WHERE AssistantTeacherID = ?");
+                $stmt->bind_param("i", $assistantTeacherId);
+                $stmt->execute();
                 $stmt->close();
-            }
 
-            // Gjennomfør transaksjonen
-            $connection->commit();
-            setFlashMessage("Courses updated successfully.");
-        } catch (mysqli_sql_exception $exception) {
-            // En feil oppstod, avbryt transaksjonen
-            $connection->rollback();
-            setFlashMessage("An error occurred while updating courses.");
+                // Hvis noen nye kurs er valgt, legg dem inn i databasen
+                if (isset($_POST['course'])) {
+                    $stmt = $connection->prepare("INSERT INTO assistantteachercourses (AssistantTeacherID, CourseID) VALUES (?, ?)");
+                    foreach ($_POST['course'] as $courseId) {
+                        $stmt->bind_param("ii", $assistantTeacherId, $courseId);
+                        $stmt->execute();
+                    }
+                    $stmt->close();
+                }
+
+                // Gjennomfør transaksjonen
+                $connection->commit();
+                setFlashMessage("Courses updated successfully.");
+            } catch (mysqli_sql_exception $exception) {
+                // En feil oppstod, avbryt transaksjonen
+                $connection->rollback();
+                setFlashMessage("An error occurred while updating courses.");
+            }
         }
     }
+    // Etter alle oppdateringer, sett en flash melding og omdiriger
+    setFlashMessage("Profil oppdatert.");
+    header("Location: profile.php");
+    exit;
+}
+
+// Retrieve booking details for the overlay form if a booking edit was requested
+if (isset($_SESSION['bookingIdToEdit'])) {
+    $bookingIdToEdit = $_SESSION['bookingIdToEdit'];
+    $bookingDetails = $bookingInstance->getBookingById($bookingIdToEdit);
+    unset($_SESSION['bookingIdToEdit']); // Clear the session variable
+}
+
+// Bare hent kurs hvis brukeren er en hjelpelærer
+if ($_SESSION['Role'] === 'hjelpelærer') {
+    $assistantTeacherId = $_SESSION['UserID'];
+
+    // Hent valgte kurs for hjelpelæreren
+    $stmt = $connection->prepare("SELECT CourseID FROM assistantteachercourses WHERE AssistantTeacherID = ?");
+    $stmt->bind_param("i", $assistantTeacherId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $selectedCourses[] = $row['CourseID'];
+    }
+    $stmt->close();
 }
 
 // Henter tilleggsinformasjon avhengig av rollen
@@ -197,7 +205,7 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
                             <?php foreach ($allCourses as $course) : ?>
                                 <li>
                                     <label>
-                                        <input type="checkbox" value="<?php echo htmlspecialchars($course['CourseID']); ?>" name="course[]" />
+                                        <input type="checkbox" value="<?php echo htmlspecialchars($course['CourseID']); ?>" name="course[]" <?php echo in_array($course['CourseID'], $selectedCourses) ? 'checked' : ''; ?> />
                                         <?php echo htmlspecialchars($course['CourseName']); ?>
                                     </label>
                                 </li>
@@ -216,7 +224,7 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
                 <?php if ($_SESSION['Role'] === 'hjelpelærer') : ?>
                     <li class="tab-link current" data-tab="tab-availability">Oppdater tilgjengelighet</li>
                 <?php endif; ?>
-                <li class="tab-link" data-tab="tab-bookings">Oversikt over bookinger</li>
+                <li class="tab-link" data-tab="tab-bookings">Oversikt over veiledningstimer</li>
             </ul>
 
             <?php if ($_SESSION['Role'] === 'hjelpelærer') : ?>
@@ -260,14 +268,16 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
                                     <!-- Cancel Booking Button -->
                                     <form method="post" action="profile.php" style="margin: 0;">
                                         <input type="hidden" name="booking_id" value="<?php echo $booking['BookingID']; ?>">
-                                        <input type="submit" name="cancel_booking" value="Avbryt booking" style="width: auto; padding: 5px 10px;">
+                                        <input type="submit" name="cancel_booking" value="Avbryt veiledningstime" style="width: auto; padding: 5px 10px;">
                                     </form>
 
                                     <!-- Edit Booking Time Button -->
-                                    <form method="post" action="profile.php" style="margin: 0;">
-                                        <input type="hidden" name="booking_id" value="<?php echo $booking['BookingID']; ?>">
-                                        <input type="submit" name="edit_booking" value="Endre bookingtid" style="width: auto; padding: 5px 10px;">
-                                    </form>
+                                    <?php if ($_SESSION['Role'] === 'hjelpelærer') : ?>
+                                        <form method="post" action="profile.php" style="margin: 0;">
+                                            <input type="hidden" name="booking_id" value="<?php echo $booking['BookingID']; ?>">
+                                            <input type="submit" name="edit_booking" value="Endre tid" style="width: auto; padding: 5px 10px;">
+                                        </form>
+                                    <?php endif; ?>
                                 </div>
                             </li>
                         <?php endforeach; ?>
