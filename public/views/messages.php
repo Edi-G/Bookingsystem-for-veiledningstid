@@ -25,6 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Det oppstod en feil ved sending av meldingen.";
         }
     }
+    
+    // Håndtere markering av meldinger som lest
+    if (isset($_POST['mark_as_read'])) {
+        foreach ($_POST['mark_as_read'] as $messageId => $value) {
+            $messageInstance->markMessageAsRead($messageId);
+        }
+    }
 }
 ?>
 
@@ -104,15 +111,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="message-container">
         <div class="message-list">
             <h2 style="padding-left: 20px;">Innboks</h2>
-            <ul>
-                <?php foreach ($userMessages as $message) : ?>
-                    <li>
-                        <strong>Fra:</strong> <?= $message['SenderID'] ?><br>
-                        <strong>Melding:</strong> <?= $message['MessageContent'] ?><br>
-                        <strong>Tid:</strong> <?= $message['Timestamp'] ?><br>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+            <form method="post"> <!-- Legg til et skjema for å markere meldinger som lest -->
+                <ul>
+                    <?php foreach ($userMessages as $message) : ?>
+                        <li>
+                            <strong>Fra:</strong> <?= $message['SenderID'] ?><br>
+                            <strong>Melding:</strong>
+                            <?php if ($message['IsRead'] == 0) : ?>
+                                <span style="color: green;">[ULEST]</span>
+                            <?php endif; ?>
+                            <?= $message['MessageContent'] ?><br>
+                            <strong>Tid:</strong> <?= $message['Timestamp'] ?><br>
+                            <input type="checkbox" name="mark_as_read[<?= $message['MessageID'] ?>]" value="1"> Marker som lest
+                        </li>
+                    <?php endforeach; ?>
+                    <input type="submit" name="mark_as_read_submit" value="Marker valgte som lest">
+                </ul>
+            </form>
         </div>
         <div class="message-form">
             <h2>Send Melding</h2>
