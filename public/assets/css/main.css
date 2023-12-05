@@ -284,3 +284,34 @@ label {
         padding: 5px;
     }
 }
+
+/* Stil for navigasjonsmenyen */
+.navbar {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+/* CSS for å plassere lenkene horisontalt */
+.navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: flex-start; /* Lenker til venstre */
+  }
+  
+  .navbar li {
+    margin: 0;
+  }
+  
+  .navbar a {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .navbar a:hover {
+    background-color: #f1f1f1;
+  }
+  

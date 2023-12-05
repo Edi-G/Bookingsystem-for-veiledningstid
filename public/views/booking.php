@@ -18,6 +18,8 @@ $allCourses = $courseInstance->getAllCourses();
 </head>
 <body>
 
+<?php include("../templates/navbar.php"); ?>
+
 <div class="form-container">
     <h2>Book Veiledningstime</h2>
     <div class="booking-form">

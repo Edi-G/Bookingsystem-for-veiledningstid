@@ -37,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
+<?php include("../templates/navbar.php"); ?>
+
 <div class="form-container">
     <h2>Meldinger</h2>
     <div class="message-list">

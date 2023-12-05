@@ -46,6 +46,11 @@ if (isset($_POST['login'])) {
         $existingUserQuery->close();
     }
 }
+
+// Sjekker om en "logout" GET-parameter er satt og viser en melding om at brukeren er logget ut
+if (isset($_GET['logout']) && $_GET['logout'] == 1) {
+    echo '<div class="logout-message">Du har blitt logget ut.</div>';
+}
 ?>
 
 <!DOCTYPE html>
@@ -56,6 +61,7 @@ if (isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
+
 <div class="form-loginandregister">
     <h2>Logg Inn</h2>
 

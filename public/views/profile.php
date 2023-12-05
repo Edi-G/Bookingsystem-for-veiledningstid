@@ -173,6 +173,7 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
 </head>
 
 <body>
+<?php include("../templates/navbar.php"); ?>
     <div class="container">
         <div class="form-container">
             <h2>Profil</h2>
