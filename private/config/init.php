@@ -24,7 +24,7 @@ $bookingInstance = new Booking($connection);
 // Oppretter User-instans
 $userInstance = new User($connection);
 
-// Oppretter Course-instans
+// Oppretter Course-instans 
 $courseInstance = new Course($connection);
 
 // Oppretter Message-instans

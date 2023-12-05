@@ -27,57 +27,43 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: calc(50% - 20px); /* Splits the width evenly between the two children, accounting for 20px gap */
+    width: calc(50% - 20px); 
     margin: 10px; /* Gir litt plass mellom seksjonene */
 }
 
 .container {
     display: flex;
-    justify-content: space-between; /* Aligns children (form-container and availability-section) side by side */
-    align-items: flex-start; /* Aligns children at the top */
-    width: 100%;
-    max-width: 1000px; /* Adjust as necessary */
-    margin: auto; /* Center the container */
-    padding: 20px; /* Add some spacing */
-}
-
-/* Stilene under er for den nye tilgjengelighetsseksjonen og dens faner */
-.tabs {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    margin-bottom: 10px;
-}
-
-.tab-link {
-    cursor: pointer;
-    padding: 10px;
-    background: #f4f4f4;
-    border: 1px solid #ccc;
-    margin-right: 5px;
-}
-
-.tab-content {
-    border: 1px solid #ccc;
-    padding: 10px;
-    display: none;
-}
-
-.current {
-    display: block; /* Viser gjeldende fane */
-}
-
-.time-inputs {
-    display: flex;
     justify-content: space-between;
-    margin-bottom: 10px; /* Adjust as needed */
+    align-items: flex-start; 
+    width: 100%;
+    max-width: 1000px; 
+    margin: auto; 
+    padding: 20px; 
 }
 
-.time-inputs label,
-.time-inputs input {
-    margin-right: 10px; /* Space between label and input */
+
+
+
+/* KNAPPER */
+.btn, input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #475ac2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
 }
 
+.btn:hover, input[type="submit"]:hover {
+    background-color: #2d40af;
+}
+/* KNAPPER */
+
+
+
+
+/* LOGIN OG REGISTRERING */
 .form-loginandregister h2, .form-container h2 {
     text-align: center;
     color: #000000;
@@ -100,20 +86,13 @@ input[type="submit"] {
     box-sizing: border-box;
 }
 
-/* Adjusted button styles for consistency */
-.btn, input[type="submit"] {
-    padding: 10px 20px;
-    background-color: #475ac2;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-    border-radius: 5px;
+.register-link {
+    margin-top: 50px;
 }
+/* LOGIN OG REGISTRERING */
 
-.btn:hover, input[type="submit"]:hover {
-    background-color: #2d40af;
-}
+
+
 
 /* PROFILE VIEW */
 .checkbox-dropdown {
@@ -226,9 +205,79 @@ textarea {
 .close-button:hover {
     background: #666;
 }
+/* PROFILE VIEW SLUTT */
 
-/* PROFILE VIEW END */
 
+
+
+/* TILGJENGELIGHETSSEKSJON OG BOOKING FANER */
+.tabs {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.tab-link {
+    cursor: pointer;
+    padding: 10px;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}
+
+.tab-content {
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: none;
+}
+
+.current {
+    display: block; /* Viser gjeldende fane */
+}
+
+.time-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.time-inputs label,
+.time-inputs input {
+    margin-right: 10px; 
+}
+/* TILGJENGELIGHETSSEKSJON OG BOOKING FANER */
+
+
+
+
+/* LEDIGE TIDSSLUKER */
+.time-slots-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 200px; 
+}
+
+.time-slot-button {
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.time-slot-button:hover {
+    background-color: #3f51b5;
+}
+
+/* LEDIGE TIDSSLUKER */
+
+
+
+
+/* SUKSESS OG ERROR MELDINGER*/
 .error-messages {
     color: red;
     font-size: 0.9em;
@@ -237,10 +286,6 @@ textarea {
     text-align: center; /* Sentrer teksten */
     width: 100%;
     max-width: 400px; /* Samme bredde som form-container for å linje opp */
-}
-
-.register-link {
-    margin-top: 50px;
 }
 
 .success-messages {
@@ -253,37 +298,9 @@ textarea {
     border: 1px solid #00b300;
     color: #006600;
 }
+/* SUKSESS OG ERROR MELDINGER*/
 
-label {
-    display: block;
-    margin-top: 10px;
-}
 
-@media (max-width: 480px) {
-    .form-container,
-    .error-messages,
-    .success-messages {
-        width: 90%;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .form-container, .availability-section {
-        width: 100%;
-        margin: 10px 0;
-        padding: 20px;
-        box-shadow: none;
-    }
-
-    .tabs .tab-link {
-        padding: 5px;
-    }
-}
 
 /* Stil for navigasjonsmenyen */
 .navbar {

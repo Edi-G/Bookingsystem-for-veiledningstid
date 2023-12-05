@@ -7,6 +7,46 @@ checkLoggedIn();
 // Bruker Course-instans til å hente kursdata
 $allCourses = $courseInstance->getAllCourses();
 
+$assistantTeacherId = null;
+$selectedCourseId = $_POST['course'] ?? $allCourses[0]['CourseID'];
+$date = $_POST['date'] ?? null;
+$chosenTime = $_POST['chosenTime'] ?? null;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bookTime'])) {
+    // Process the booking
+    $studentId = $_SESSION['UserID'];
+    $assistantTeacherId = $_POST['teacher'];
+    $courseId = $_POST['course'];
+    $startTime = $date . ' ' . $chosenTime;
+    $endTime = (new DateTime($startTime))->add(new DateInterval('PT30M'))->format('Y-m-d H:i:s');
+
+    $bookingMade = $bookingInstance->createBooking($studentId, $assistantTeacherId, $courseId, $startTime, $endTime);
+
+    if ($bookingMade) {
+        // If the booking was successful, set a flash message or similar
+    } else {
+        // If the booking failed, set an error message
+    }
+}
+
+// Fetch assistant teachers for the selected course
+$assistantTeachersQuery = "SELECT u.UserID, u.FullName FROM assistantteachercourses atc JOIN users u ON atc.AssistantTeacherID = u.UserID WHERE atc.CourseID = ?";
+$assistantTeachersStmt = $connection->prepare($assistantTeachersQuery);
+$assistantTeachersStmt->bind_param("i", $selectedCourseId);
+$assistantTeachersStmt->execute();
+$assistantTeachersResult = $assistantTeachersStmt->get_result();
+$assistantTeachers = $assistantTeachersResult->fetch_all(MYSQLI_ASSOC);
+$assistantTeachersStmt->close();
+
+// Determine the assistant teacher ID based on the form submission
+$assistantTeacherId = $_POST['teacher'] ?? null; // This gets the assistant teacher ID from the form submission
+
+// Fetch available slots if a date and teacher have been selected
+$availableSlots = [];
+if ($date && $assistantTeacherId) {
+    $availableSlots = $bookingInstance->getAvailableSlots($assistantTeacherId, $date);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -17,83 +57,60 @@ $allCourses = $courseInstance->getAllCourses();
     <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>
-
 <?php include("../templates/navbar.php"); ?>
 
 <div class="form-container">
-    <h2>Book Veiledningstime</h2>
-    <div class="booking-form">
-        <form id="bookingForm" action="../../private/classes/Booking.php" method="post">
-            <div class="form-group">
-                <label for="courseSelect">Kurs:</label>
-                <select id="courseSelect" name="course">
-                    <?php
-                    foreach ($allCourses as $course) {
-                        echo "<option value=\"{$course['CourseID']}\">{$course['CourseName']}</option>";
-                    }
-                    ?>
-                </select>
-            </div>
+        <h2>Book Veiledningstime</h2>
+        <div class="booking-form">
+            <form id="bookingForm" action="booking.php" method="post">
+                <div class="form-group">
+                    <label for="courseSelect">Kurs:</label>
+                    <select id="courseSelect" name="course">
+                        <?php foreach ($allCourses as $course) : ?>
+                            <option value="<?= htmlspecialchars($course['CourseID']) ?>" <?= (isset($_POST['course']) && $_POST['course'] == $course['CourseID']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($course['CourseName']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="teacherSelect">Hjelpelærer:</label>
-                <select id="teacherSelect" name="teacher">
-                    <!-- Hjelpelærere vil bli lastet inn via JavaScript/AJAX -->
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="teacherSelect">Hjelpelærer:</label>
+                    <select id="teacherSelect" name="teacher">
+                        <?php if (count($assistantTeachers) > 0) : ?>
+                            <?php foreach ($assistantTeachers as $teacher) : ?>
+                                <option value="<?= htmlspecialchars($teacher['UserID']) ?>" <?= (isset($_POST['teacher']) && $_POST['teacher'] == $teacher['UserID']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($teacher['FullName']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <option>Ingen tilgjengelige hjelpelærere</option>
+                        <?php endif; ?>
+                    </select>
+                </div>
 
-            <div class="form-group">
                 <label for="dateSelect">Dato:</label>
-                <input type="date" id="dateSelect" name="date">
-            </div>
+                <input type="date" id="dateSelect" name="date" onchange="this.form.submit()" value="<?= isset($_POST['date']) ? $_POST['date'] : '' ?>" required>
 
-            <div class="form-group">
-                <label for="timeSelect">Tid:</label>
-                <input type="time" id="timeSelect" name="time">
-            </div>
+                <input type="hidden" name="chosenTime" id="hiddenTimeSlot" value="">
 
-            <button type="submit" class="btn">Bestill Time</button>
-        </form>
+                <div class="form-group">
+                <?php if (!empty($availableSlots)) : ?>
+                    <label for="timeSelect">Tid:</label>
+                    <?php foreach ($availableSlots as $timeSlot) : ?>
+                        <div class="time-slot">
+                            <input type="radio" id="time-<?= $timeSlot ?>" name="chosenTime" value="<?= $timeSlot ?>" <?= $chosenTime == $timeSlot ? 'checked' : '' ?>>
+                            <label for="time-<?= $timeSlot ?>"><?= $timeSlot ?></label>
+                        </div>
+                    <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>Ingen ledige tider for valgt dato.</p>
+                    <?php endif; ?>
+                </div>
+
+                <button type="submit" name="bookTime" class="btn">Bestill Time</button>
+            </form>
+        </div>
     </div>
-
-    <div id="calendar">
-        <!-- Eksempelvis kan PHP-script generere tilgjengelige tidsluker basert på valgt hjelpelærer og kurs -->
-    </div>
-</div>
-
-<!-- <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var courseSelect = document.getElementById('courseSelect');
-    var teacherSelect = document.getElementById('teacherSelect');
-
-    // Funksjon for å hente hjelpelærere basert på valgt kurs
-    function fetchAssistants(courseId) {
-        fetch('../../private/actions/getAssistants.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'courseId=' + courseId
-        })
-        .then(response => response.json())
-        .then(data => {
-            teacherSelect.innerHTML = ''; // Tømmer tidligere hjelpelærere
-            data.forEach(function (teacher) {
-                var option = document.createElement('option');
-                option.value = teacher.UserID;
-                option.textContent = teacher.FullName; // Anta at dette er navnefeltet i databasen
-                teacherSelect.appendChild(option);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    // Event listener for kursvalg
-    courseSelect.addEventListener('change', function () {
-        var selectedCourse = this.value;
-        fetchAssistants(selectedCourse);
-    });
-});
-</script> -->
 </body>
 </html>

@@ -27,31 +27,6 @@ class Booking {
         }
     }
 
-    // // Hente alle bookinger for en bestemt bruker
-    // public function getBookingsByUserId($userId, $role) {
-    //     if ($role == 'student') {
-    //         $query = "SELECT * FROM bookings WHERE StudentID = ?";
-    //     } elseif ($role == 'hjelpelærer') {
-    //         $query = "SELECT * FROM bookings WHERE AssistantTeacherID = ?";
-    //     } else {
-    //         throw new Exception("Invalid role specified.");
-    //     }
-        
-    //     $stmt = $this->db->prepare($query);
-
-    //     if ($stmt === false) {
-    //         throw new Exception("Unable to prepare statement: " . $this->db->error);
-    //     }
-
-    //     $stmt->bind_param("i", $userId);
-    //     $stmt->execute();
-    //     $result = $stmt->get_result();
-    //     $bookings = $result->fetch_all(MYSQLI_ASSOC);
-
-    //     $stmt->close();
-    //     return $bookings;
-    // }
-
     // Hente alle bookinger for en bestemt bruker
     public function getDetailedBookingsByUserId($userId, $role)
     {
@@ -137,6 +112,58 @@ class Booking {
 
         $stmt->close();
         return $booking;
+    }
+
+    public function getAvailableSlots($assistantTeacherId, $date) {
+        // Henter alle tilgjengeligheter for hjelpelærer på den gitte datoen 
+        $availabilityQuery = "SELECT * FROM assistantteacheravailability WHERE AssistantTeacherID = ? AND Day = ?";
+        $availabilityStmt = $this->db->prepare($availabilityQuery);
+        $availabilityStmt->bind_param("is", $assistantTeacherId, $date);
+        $availabilityStmt->execute();
+        $availabilityResult = $availabilityStmt->get_result();
+        $availabilitySlots = $availabilityResult->fetch_all(MYSQLI_ASSOC);
+        $availabilityStmt->close();
+    
+        // Henter alle bookinger for hjelpelærer på den gitte datoen 
+        $bookingQuery = "SELECT * FROM bookings WHERE AssistantTeacherID = ? AND DATE(StartTime) = ? AND Status != 'cancelled'";
+        $bookingStmt = $this->db->prepare($bookingQuery);
+        $bookingStmt->bind_param("is", $assistantTeacherId, $date);
+        $bookingStmt->execute();
+        $bookingResult = $bookingStmt->get_result();
+        $bookings = $bookingResult->fetch_all(MYSQLI_ASSOC);
+        $bookingStmt->close();
+    
+        // Kalkulerer ledige tider basert på tilgjengelighet og bookinger
+        $availableSlots = [];
+        foreach ($availabilitySlots as $slot) {
+            $slotStart = new DateTime($slot['StartTime']);
+            $slotEnd = new DateTime($slot['EndTime']);
+            
+            // Check each 30 minute interval in the availability slot
+            while ($slotStart < $slotEnd) {
+                $intervalEnd = clone $slotStart;
+                $intervalEnd->add(new DateInterval('PT30M'));
+    
+                $isAvailable = true;
+                foreach ($bookings as $booking) {
+                    $bookingStart = new DateTime($booking['StartTime']);
+                    $bookingEnd = new DateTime($booking['EndTime']);
+                    if ($slotStart < $bookingEnd && $bookingStart < $intervalEnd) {
+                        // Time slot is not available because there is a booking
+                        $isAvailable = false;
+                        break;
+                    }
+                }
+    
+                if ($isAvailable) {
+                    $availableSlots[] = $slotStart->format('H:i');
+                }
+    
+                $slotStart->add(new DateInterval('PT30M')); // Gå til den neste 30 minutters intervallen 
+            }
+        }
+    
+        return $availableSlots;
     }
 
 }

@@ -1,5 +1,5 @@
 <?php
-require_once("../../private/config/init.php");
+require_once "../../private/config/init.php";
 
 // Innloggings sjekk, omdirigerer hvis ikke logget inn
 checkLoggedIn();

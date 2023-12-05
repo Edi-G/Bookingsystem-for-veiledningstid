@@ -2,7 +2,7 @@
 
 <?php
 
-require_once __DIR__ . '/../../private/config/init.php';
+require_once "../../private/config/init.php";
 
 // Innloggings sjekk, hvis ikke omdiringeres det
 checkLoggedIn();
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Handle the edit booking request
+    // Håndterer edit booking request
     if (isset($_POST['edit_booking'])) {
         $_SESSION['bookingIdToEdit'] = $_POST['booking_id'];
         header('Location: profile.php');
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newStartTime = $_POST['newStartTime'];
         $newEndTime = $_POST['newEndTime'];
 
-        // Validerer og formaterer dato og tidV
+        // Validerer og formaterer dato og tid
         $newStartTimeFormatted = date('Y-m-d H:i:s', strtotime($newStartTime));
         $newEndTimeFormatted = date('Y-m-d H:i:s', strtotime($newEndTime));
 
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setFlashMessage("Error cancelling booking.");
         }
 
-        // Omdirigerer Redirect to refresh the data on the page
+        // Omdirigerer for oppdatering av data
         header('Location: profile.php');
         exit;
     }
@@ -129,11 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Retrieve booking details for the overlay form if a booking edit was requested
+// Hent booking detaljer for "endre tid" hvis requested
 if (isset($_SESSION['bookingIdToEdit'])) {
     $bookingIdToEdit = $_SESSION['bookingIdToEdit'];
     $bookingDetails = $bookingInstance->getBookingById($bookingIdToEdit);
-    unset($_SESSION['bookingIdToEdit']); // Clear the session variable
+    unset($_SESSION['bookingIdToEdit']); // Klarer sesjons variablen
 }
 
 // Bare hent kurs hvis brukeren er en hjelpelærer
@@ -263,16 +263,14 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
                                 <strong>Tid:</strong> <?php echo htmlspecialchars($booking['StartTime']); ?> til <?php echo htmlspecialchars($booking['EndTime']); ?><br>
                                 <strong>Status:</strong> <?php echo htmlspecialchars($booking['Status']); ?>
 
-
-                                <!-- Buttons for actions -->
                                 <div style="display: flex; gap: 20px; margin-top: -10px; margin-bottom: 25px;">
-                                    <!-- Cancel Booking Button -->
+                                    <!-- Avbryt veiledningstime knapp -->
                                     <form method="post" action="profile.php" style="margin: 0;">
                                         <input type="hidden" name="booking_id" value="<?php echo $booking['BookingID']; ?>">
                                         <input type="submit" name="cancel_booking" value="Avbryt veiledningstime" style="width: auto; padding: 5px 10px;">
                                     </form>
 
-                                    <!-- Edit Booking Time Button -->
+                                    <!-- Endre tid knapp -->
                                     <?php if ($_SESSION['Role'] === 'hjelpelærer') : ?>
                                         <form method="post" action="profile.php" style="margin: 0;">
                                             <input type="hidden" name="booking_id" value="<?php echo $booking['BookingID']; ?>">
@@ -308,7 +306,7 @@ if ($_SESSION['Role'] === 'hjelpelærer') {
     <?php endif; ?>
 
     <script>
-        // Custom dropdown
+        // Dropdown meny for kurs
         $(".checkbox-dropdown").click(function() {
             $(this).toggleClass("is-active");
         });
