@@ -43,7 +43,7 @@ class Booking {
         JOIN users u ON b.AssistantTeacherID = u.UserID
         WHERE b.StudentID = ? AND b.Status != 'cancelled'";
         } else {
-            // Handle error or invalid role
+            // Handle error for ugyldig rolle
             throw new Exception("Invalid role specified.");
         }
     
@@ -139,7 +139,7 @@ class Booking {
             $slotStart = new DateTime($slot['StartTime']);
             $slotEnd = new DateTime($slot['EndTime']);
             
-            // Check each 30 minute interval in the availability slot
+            // Sjekk hver 30 minutters intervall for tilgjengeligheten 
             while ($slotStart < $slotEnd) {
                 $intervalEnd = clone $slotStart;
                 $intervalEnd->add(new DateInterval('PT30M'));
@@ -149,7 +149,7 @@ class Booking {
                     $bookingStart = new DateTime($booking['StartTime']);
                     $bookingEnd = new DateTime($booking['EndTime']);
                     if ($slotStart < $bookingEnd && $bookingStart < $intervalEnd) {
-                        // Time slot is not available because there is a booking
+                        // Tids luke er ikke tilgjengelig fordi det er booket
                         $isAvailable = false;
                         break;
                     }

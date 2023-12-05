@@ -13,7 +13,7 @@ $date = $_POST['date'] ?? null;
 $chosenTime = $_POST['chosenTime'] ?? null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bookTime'])) {
-    // Process the booking
+    // Prosseserer bookingen
     $studentId = $_SESSION['UserID'];
     $assistantTeacherId = $_POST['teacher'];
     $courseId = $_POST['course'];
@@ -23,13 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bookTime'])) {
     $bookingMade = $bookingInstance->createBooking($studentId, $assistantTeacherId, $courseId, $startTime, $endTime);
 
     if ($bookingMade) {
-        // If the booking was successful, set a flash message or similar
-    } else {
-        // If the booking failed, set an error message
+    } else {  
     }
 }
 
-// Fetch assistant teachers for the selected course
+// Hent hjelpelærere forFetch assistant teachers for the selected course
 $assistantTeachersQuery = "SELECT u.UserID, u.FullName FROM assistantteachercourses atc JOIN users u ON atc.AssistantTeacherID = u.UserID WHERE atc.CourseID = ?";
 $assistantTeachersStmt = $connection->prepare($assistantTeachersQuery);
 $assistantTeachersStmt->bind_param("i", $selectedCourseId);
@@ -38,10 +36,10 @@ $assistantTeachersResult = $assistantTeachersStmt->get_result();
 $assistantTeachers = $assistantTeachersResult->fetch_all(MYSQLI_ASSOC);
 $assistantTeachersStmt->close();
 
-// Determine the assistant teacher ID based on the form submission
-$assistantTeacherId = $_POST['teacher'] ?? null; // This gets the assistant teacher ID from the form submission
+// Bestem hjelpe lærer ID basert på skjema innsending
+$assistantTeacherId = $_POST['teacher'] ?? null; // Henter hjelpelærer ID fra skjema innsending 
 
-// Fetch available slots if a date and teacher have been selected
+// Hent tilgjengelige tider hvis en dato og hjelpelærer har blitt valgt 
 $availableSlots = [];
 if ($date && $assistantTeacherId) {
     $availableSlots = $bookingInstance->getAvailableSlots($assistantTeacherId, $date);
