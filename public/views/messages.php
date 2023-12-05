@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/../../private/config/init.php';
+require_once("../../private/config/init.php");
 
 // Innloggings sjekk, omdirigerer hvis ikke logget inn
 checkLoggedIn();
 
-// Hent meldinger for den innloggede brukeren (for eksempel bruker med ID = 1)
+// Hent meldinger for den innloggede brukeren
 $userId = $_SESSION['UserID'];
-$userMessages = $messageInstance->getMessagesByUserId($userId);
+//$userMessages = $messageInstance->getMessagesByUserId($userId);
 
 // Skjemabehandling for å sende meldinger
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
