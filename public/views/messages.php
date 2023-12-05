@@ -30,45 +30,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="no">
+
 <head>
     <meta charset="UTF-8">
     <title>Meldinger</title>
     <link rel="stylesheet" href="../assets/css/main.css">
+    <style>
+        .message-container {
+            width: 70%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .message-list {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            max-height: 400px;
+            list-style-type: none;
+            margin: 0;
+            padding-left: 0;
+        }
+
+        .message-list li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        .message-list li strong {
+            font-weight: bold;
+        }
+
+        .message-form {
+            flex: 0 0 25%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        .message-form label,
+        .message-form textarea,
+        .message-form input[type="submit"] {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .message-form textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .message-form input[type="submit"] {
+            padding: 10px;
+            background-color: #337ab7;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .message-form input[type="submit"]:hover {
+            background-color: #286090;
+        }
+    </style>
 </head>
+
 <body>
-
-<?php include("../templates/navbar.php"); ?>
-
-<div class="form-container">
-    <h2>Meldinger</h2>
-    <div class="message-list">
-        <!-- Vis alle meldinger for brukeren -->
-        <ul>
-            <?php foreach ($userMessages as $message): ?>
-                <li>
-                    <strong>Fra:</strong> <?= $message['SenderID'] ?><br>
-                    <strong>Melding:</strong> <?= $message['MessageContent'] ?><br>
-                    <strong>Tid:</strong> <?= $message['Timestamp'] ?><br>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-
-    <div class="message-form">
-        <!-- Skjema for å sende meldinger -->
-        <form method="post">
-            <div class="form-group">
+    <?php include("../templates/navbar.php"); ?>
+    <div class="message-container">
+        <div class="message-list">
+            <h2 style="padding-left: 20px;">Inboks</h2>
+            <ul>
+                <?php foreach ($userMessages as $message) : ?>
+                    <li>
+                        <strong>Fra:</strong> <?= $message['SenderID'] ?><br>
+                        <strong>Melding:</strong> <?= $message['MessageContent'] ?><br>
+                        <strong>Tid:</strong> <?= $message['Timestamp'] ?><br>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="message-form">
+            <h2>Send Melding</h2>
+            <form method="post">
                 <label for="receiverId">Mottaker ID:</label>
                 <input type="text" id="receiverId" name="receiverId">
-            </div>
-            <div class="form-group">
                 <label for="messageContent">Melding:</label>
                 <textarea id="messageContent" name="messageContent"></textarea>
-            </div>
-            <button type="submit" class="btn">Send Melding</button>
-        </form>
+                <input type="submit" name="send_message" value="Send Melding">
+            </form>
+        </div>
     </div>
-</div>
-
 </body>
+
 </html>
