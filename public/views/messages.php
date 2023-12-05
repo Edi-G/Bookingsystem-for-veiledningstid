@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <?php include("../templates/navbar.php"); ?>
-    
+
     <div class="message-container">
         <div class="message-list">
             <h2 style="padding-left: 20px;">Innboks</h2>
@@ -119,14 +119,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <li>
                             <strong>Fra:</strong> <?= $message['SenderID'] ?><br>
                             <strong>Melding:</strong>
+                            <!-- Viser '[ULEST]' kun hvis meldingen ikke er lest -->
                             <?php if ($message['IsRead'] == 0) : ?>
                                 <span style="color: green;">[ULEST]</span>
                             <?php endif; ?>
                             <?= $message['MessageContent'] ?><br>
                             <strong>Tid:</strong> <?= $message['Timestamp'] ?><br>
-                            <input type="checkbox" name="mark_as_read[<?= $message['MessageID'] ?>]" value="1"> Marker som lest
+                            <!-- Viser 'Marker som lest' kun hvis meldingen ikke er lest -->
+                            <?php if ($message['IsRead'] == 0) : ?>
+                                <input type="checkbox" name="mark_as_read[<?= $message['MessageID'] ?>]" value="1"> Marker som lest
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
+                    <!-- Knapp for å markere valgte meldinger som lest -->
                     <input type="submit" name="mark_as_read_submit" value="Marker valgte som lest">
                 </ul>
             </form>
