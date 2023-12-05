@@ -6,7 +6,8 @@ checkLoggedIn();
 
 // Hent meldinger for den innloggede brukeren
 $userId = $_SESSION['UserID'];
-//$userMessages = $messageInstance->getMessagesByUserId($userId);
+$userMessages = $messageInstance->getMessagesByUserId($userId);
+
 
 // Skjemabehandling for å sende meldinger
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
