@@ -1,5 +1,4 @@
 <?php
-
 class Message {
     private $db;
 
@@ -7,9 +6,24 @@ class Message {
         $this->db = $dbConnection;
     }
 
+    // Hent alle meldinger for en bestemt bruker
+    public function getMessagesByUserId($userId) {
+        $query = "SELECT * FROM messages WHERE RecieverID = ?";
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+    
+        $result = $stmt->get_result();
+        $messages = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        return $messages;
+    }
+
     // Send en melding
     public function sendMessage($senderId, $receiverId, $messageContent) {
-        $query = "INSERT INTO messages (SenderID, ReceiverID, MessageContent, Timestamp, IsRead) VALUES (?, ?, ?, NOW(), 0)";
+        $query = "INSERT INTO messages (SenderID, RecieverID, MessageContent, Timestamp, IsRead) VALUES (?, ?, ?, NOW(), 0)";
         $stmt = $this->db->prepare($query);
 
         if ($stmt === false) {
@@ -25,24 +39,6 @@ class Message {
             $stmt->close();
             return false;
         }
-    }
-
-    // Hent alle meldinger for en bestemt bruker
-    public function getMessagesByUserId($userId) {
-        $query = "SELECT * FROM messages WHERE RecieverID = ?";
-        $stmt = $this->db->prepare($query);
-
-        if ($stmt === false) {
-            throw new Exception("Unable to prepare statement: " . $this->db->error);
-        }
-
-        $stmt->bind_param("i", $userId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $messages = $result->fetch_all(MYSQLI_ASSOC);
-
-        $stmt->close();
-        return $messages;
     }
 
     // Markere en melding som lest
